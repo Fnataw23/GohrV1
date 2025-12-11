@@ -1,24 +1,34 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Application extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'ticket_id', 'application_date', 'status', 'details'];
+    protected $fillable = [
+        'hunter_id',
+        'operator_id',
+        'status',
+        'scan_front',
+        'scan_back',
+        'consent_scan',
+    ];
 
-    // Связь с пользователем
+    protected $dates = ['deleted_at'];
+
+    // Связь с охотником
+    public function hunter()
+    {
+        return $this->belongsTo(Hunter::class);
+    }
+    // Связь с оператором
     public function user()
     {
-        return $this->belongsTo(User::class); // Каждая заявка принадлежит одному пользователю
-    }
-
-    // Связь с билетом
-    public function ticket()
-    {
-        return $this->belongsTo(Ticket::class); // Каждая заявка может быть связана с одним билетом
+        return $this->belongsTo(User::class, 'operator_id');
     }
 }

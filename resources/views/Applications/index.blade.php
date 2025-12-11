@@ -1,6 +1,51 @@
 @extends('layouts.main')
+
 @section('content')
-    <div>
-        <h2>Принять заявку</h2>
+    <div class="container">
+        <h1>Список заявок</h1>
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Охотник</th>
+                <th>Email</th>
+                <th>Телефон</th>
+                <th>Статус</th>
+                <th>Дата</th>
+            </tr>
+            </thead>
+            <tbody>
+            @forelse($applications as $application)
+                <tr>
+                    <td>{{ $application->id }}</td>
+                    <td>
+                        {{ $application->hunter->last_name ?? '' }}
+                        {{ $application->hunter->first_name ?? '' }}
+                    </td>
+                    <td>{{ $application->hunter->email ?? '' }}</td>
+                    <td>{{ $application->hunter->phone ?? '' }}</td>
+                    <td>
+                        <span class="badge bg-info">
+                            {{ $application->status === 'new' ? 'Новая' : $application->status }}
+                        </span>
+                    </td>
+                    <td>{{ $application->created_at->format('d.m.Y H:i') }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="6">Нет заявок</td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
+
+        {{ $applications->links() }}
     </div>
 @endsection

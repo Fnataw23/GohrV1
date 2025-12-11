@@ -4,20 +4,15 @@ import laravel from 'laravel-vite-plugin';
 export default defineConfig({
     plugins: [
         laravel({
-            input: [
-                'resources/sass/app.scss', // или 'resources/css/app.css'
-                'resources/js/app.js'
-            ],
+            input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
         }),
     ],
-    build: {
-        assetsDir: '',
-        rollupOptions: {
-            output: {
-                assetFileNames: '[name][extname]',
-                entryFileNames: '[name].js',
-            },
+    server: {
+        host: '0.0.0.0',  // Важно для Docker
+        port: 5173,
+        hmr: {
+            host: 'localhost',  // Или имя твоего Docker сервиса
         },
     },
 });

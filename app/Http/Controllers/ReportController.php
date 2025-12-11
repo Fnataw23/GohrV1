@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
-    public  function index()
+    public function index()
     {
-        return view('reports.index');
+        return view('reports.index', [
+            'title' => 'Отчеты (в разработке)'
+        ]);
     }
 }
