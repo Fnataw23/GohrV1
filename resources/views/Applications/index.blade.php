@@ -14,8 +14,8 @@
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Охотник</th>
-                <th>Email</th>
+                <th>ФИО</th>
+                <th>Год рождения</th>
                 <th>Телефон</th>
                 <th>Статус</th>
                 <th>Дата</th>
@@ -29,7 +29,7 @@
                         {{ $application->hunter->last_name ?? '' }}
                         {{ $application->hunter->first_name ?? '' }}
                     </td>
-                    <td>{{ $application->hunter->email ?? '' }}</td>
+                    <td>{{ $application->hunter->date_of_birth ? $application->hunter->date_of_birth->format('Y') : '' }}</td>
                     <td>{{ $application->hunter->phone ?? '' }}</td>
                     <td>
                         <span class="badge bg-info">

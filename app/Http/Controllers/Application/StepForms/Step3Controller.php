@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Application\StepForms;
 
-use App\Http\Requests\Step3Request;
+use App\Http\Requests\Application\Step3Request;
 
 class Step3Controller
 {

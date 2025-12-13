@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Application;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class Step6Request extends FormRequest
+class Step8Request extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,8 +22,7 @@ class Step6Request extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'required|in:unknown,yes,no',
-            'description' => 'required_if:status,yes|nullable|string|max:2000',
+            //
         ];
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Application\ShowController;
 use App\Http\Controllers\Application\StepForms\FinishController;
 use App\Http\Controllers\Application\StepForms\Step1Controller;
 use App\Http\Controllers\Application\StepForms\Step2Controller;
@@ -10,37 +11,27 @@ use App\Http\Controllers\Application\StepForms\Step6Controller;
 use App\Http\Controllers\Application\StepForms\Step7Controller;
 use App\Http\Controllers\Application\StepForms\ConfirmController;
 use App\Http\Controllers\Application\StepForms\IndexController;
-use App\Http\Controllers\Application\StepForms\ShowController;
 use App\Http\Controllers\Front\MainController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\TicketController;
-use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 // Главная страница
 Route::get('/', [MainController::class, 'index'])->name('main.index');
 
-// Защищенные маршруты (требуют только аутентификации)
+// Защищённые маршруты (требуют аутентификации)
 Route::middleware(['auth'])->group(function () {
-    // Дашборд Breeze (можно удалить если не нужен)
+
+    // Дашборд
     Route::get('/dashboard', function () {
-        return redirect()->intended(route('applications.index'));
+        return redirect()->route('applications.index'); // убрали intended()
     })->name('dashboard');
 
-    // Страница для авторизованных пользователей
-    Route::get('/home', [HomeController::class, 'index'])->name('home.index');
-
-    // Маршруты для заявок
+    // Заявки
     Route::prefix('applications')->name('applications.')->group(function () {
-        // Список всех заявок
         Route::get('/', [IndexController::class, '__invoke'])->name('index');
-
-        // Просмотр конкретной заявки
         Route::get('/{application}', [ShowController::class, '__invoke'])->name('show');
 
-        // Создание заявки (шаги 1-7)
         Route::get('/create/step1', [Step1Controller::class, 'show'])->name('create.step1');
         Route::post('/create/step1', [Step1Controller::class, 'store'])->name('store.step1');
 
@@ -62,16 +53,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create/step7', [Step7Controller::class, 'show'])->name('create.step7');
         Route::post('/create/step7', [Step7Controller::class, 'store'])->name('store.step7');
 
-        // Подтверждение заявки
         Route::get('/create/confirm', [ConfirmController::class, '__invoke'])->name('create.confirm');
-
-        // Финиш - сохранение заявки
         Route::post('/create/finish', [FinishController::class, '__invoke'])->name('store.finish');
     });
-
-    // Билеты
-    Route::get('/tickets', [TicketController::class, 'index'])->name('ticket.index');
-    Route::get('/tickets/create', [TicketController::class, 'create'])->name('ticket.create');
 
     // Отчёты
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
@@ -82,8 +66,5 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// О проекте - публичный маршрут
-Route::get('/about', [AboutController::class, 'index'])->name('about.index');
-
-// Маршруты аутентификации Breeze
+// Подключаем маршруты аутентификации Breeze
 require __DIR__.'/auth.php';

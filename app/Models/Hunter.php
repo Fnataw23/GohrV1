@@ -24,6 +24,12 @@ class Hunter extends Model
         'organization_id', // Добавьте это поле!
     ];
 
+    protected $casts = [
+        'date_of_birth' => 'date',
+        'mn' => 'boolean',
+        'deleted_at' => 'datetime',
+    ];
+
     protected $dates = ['deleted_at'];
 
     // Связь с паспортом
