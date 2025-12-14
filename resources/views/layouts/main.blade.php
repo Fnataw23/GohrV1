@@ -9,46 +9,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
 
-    <!-- Breeze стили (если хочешь оставить Tailwind для форм) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
-        .logo-img {
-            max-width: 100%;
-            height: auto;
-            max-height: 100px;
-        }
-
-        .navbar-nav {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-
-        /* Эффекты при наведении на ссылки */
-        .nav-link:hover {
-            color: #0d6efd;
-            text-decoration: underline;
-        }
-
-        /* Карточки контента */
-        .card-custom {
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .navbar-toggler {
-            border: none;
-        }
-
-        .navbar-toggler-icon {
-            background-color: #0d6efd;
-        }
-
-        .nav-item .nav-link {
-            padding: 12px 18px;
-            transition: all 0.3s ease-in-out;
-        }
+        .logo-img { max-width: 100%; height: auto; max-height: 100px; }
+        .navbar-nav { display: flex; justify-content: center; width: 100%; }
+        .nav-link:hover { color: #0d6efd; text-decoration: underline; }
+        .card-custom { border-radius: 15px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .navbar-toggler { border: none; }
+        .navbar-toggler-icon { background-color: #0d6efd; }
+        .nav-item .nav-link { padding: 12px 18px; transition: all 0.3s ease-in-out; }
     </style>
 </head>
 <body>
@@ -66,14 +36,14 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mb-2 mb-lg-0 justify-content-center">
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('main.index') ? 'active' : '' }}"
-                               href="{{route('main.index')}}">Главная</a>
+                            <a class="nav-link {{ request()->routeIs('main.index') || request()->routeIs('applications.*') && !request()->routeIs('applications.create.*') ? 'active' : '' }}"
+                               href="{{ route('main.index') }}">Главная</a>
                         </li>
 
                         @auth
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('applications.*') ? 'active' : '' }}"
-                                   href="{{route('applications.create.step1')}}">Принять заявку</a>
+                                <a class="nav-link {{ request()->routeIs('applications.create.*') ? 'active' : '' }}"
+                                   href="{{ route('applications.create.step1') }}">Принять заявку</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Запрос в Гиц</a>
@@ -82,6 +52,13 @@
                                 <a class="nav-link {{ request()->routeIs('reports.index') ? 'active' : '' }}"
                                    href="{{ route('reports.index') }}">Отчеты</a>
                             </li>
+
+                            @if(Auth::user()->inRole('admin'))
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->routeIs('platform.*') ? 'active' : '' }}"
+                                       href="{{ route('platform.main') }}">Админка</a>
+                                </li>
+                            @endif
 
                             <!-- Кнопка выхода -->
                             <li class="nav-item">
@@ -105,7 +82,6 @@
         <div class="container">
             @yield('content')
         </div>
-
     </div>
 </div>
 

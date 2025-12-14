@@ -2,40 +2,87 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Orchid\Filters\Types\Like;
+use Orchid\Filters\Types\Where;
+use Orchid\Filters\Types\WhereDateStartEnd;
+use Orchid\Platform\Models\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasFactory, SoftDeletes, Notifiable;
-
     protected $fillable = [
-        'name',
-        'login',  // Логин
+        'login',
+        'email',
         'password',
         'role',
         'status',
+        'permissions',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'permissions',
     ];
 
-    protected $dates = ['deleted_at'];
+    protected $casts = [
+        'permissions'       => 'array',
+        'email_verified_at' => 'datetime',
+    ];
 
-    // Укажи поле для аутентификации (вместо email)
-    public function username()
+    protected $allowedFilters = [
+        'id'         => Where::class,
+        'login'      => Like::class,
+        'email'      => Like::class,
+        'role'       => Where::class,
+        'status'     => Where::class,
+        'updated_at' => WhereDateStartEnd::class,
+        'created_at' => WhereDateStartEnd::class,
+    ];
+
+    protected $allowedSorts = [
+        'id',
+        'login',
+        'email',
+        'role',
+        'status',
+        'updated_at',
+        'created_at',
+    ];
+
+    /**
+     * Orchid требует этот метод
+     */
+    public function getNameAttribute()
     {
-        return 'login';
+        return $this->login;
     }
 
-    // Связь с заявками
-    public function applications()
+    /**
+     * Orchid требует этот метод
+     */
+    public function getEmailAttribute()
     {
-        return $this->hasMany(Application::class, 'operator_id');  // Все заявки этого оператора
+        if (!empty($this->attributes['email'])) {
+            return $this->attributes['email'];
+        }
+        return $this->login . '@localhost';
+    }
+
+    /**
+     * Проверка прав доступа для Orchid
+     * Сигнатура: hasAccess(string $permit, bool $cache = true)
+     */
+    public function hasAccess(string $permit, bool $cache = true): bool
+    {
+        return $this->role === 'admin' && !empty($this->attributes['email']);
+    }
+
+    /**
+     * Проверка роли для Orchid
+     * Сигнатура: inRole($role)
+     */
+    public function inRole($role): bool
+    {
+        return $this->role === $role;
     }
 }

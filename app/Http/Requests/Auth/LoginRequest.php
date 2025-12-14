@@ -37,14 +37,17 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        // ИСПРАВЛЯЕМ: используем поле 'login' из базы данных
+        $login = $this->input('login');
+
+        // Определяем: если есть @ - это email, иначе - логин
+        $field = str_contains($login, '@') ? 'email' : 'login';
+
         if (! Auth::attempt([
-            'login' => $this->login,  // Меняем 'username' на 'login'
+            $field => $login,  // Динамическое поле: либо 'login', либо 'email'
             'password' => $this->password
         ], $this->boolean('remember'))) {
 
             RateLimiter::hit($this->throttleKey());
-
             throw ValidationException::withMessages([
                 'login' => trans('auth.failed'),
             ]);

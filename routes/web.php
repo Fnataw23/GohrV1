@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Application\EditController;
 use App\Http\Controllers\Application\ShowController;
 use App\Http\Controllers\Application\StepForms\FinishController;
 use App\Http\Controllers\Application\StepForms\Step1Controller;
@@ -16,21 +17,22 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// Главная страница
-Route::get('/', [MainController::class, 'index'])->name('main.index');
-
 // Защищённые маршруты (требуют аутентификации)
 Route::middleware(['auth'])->group(function () {
 
     // Дашборд
     Route::get('/dashboard', function () {
-        return redirect()->route('applications.index'); // убрали intended()
+        return redirect()->route('main.index');
     })->name('dashboard');
+
+    // Главная страница
+    Route::get('/', [MainController::class, 'index'])->name('main.index');
 
     // Заявки
     Route::prefix('applications')->name('applications.')->group(function () {
-        Route::get('/', [IndexController::class, '__invoke'])->name('index');
         Route::get('/{application}', [ShowController::class, '__invoke'])->name('show');
+        Route::get('/{application}/edit', [EditController::class, 'edit'])->name('edit');
+        Route::patch('/{application}', [EditController::class, 'update'])->name('update');
 
         Route::get('/create/step1', [Step1Controller::class, 'show'])->name('create.step1');
         Route::post('/create/step1', [Step1Controller::class, 'store'])->name('store.step1');
@@ -56,7 +58,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create/confirm', [ConfirmController::class, '__invoke'])->name('create.confirm');
         Route::post('/create/finish', [FinishController::class, '__invoke'])->name('store.finish');
     });
-
     // Отчёты
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 

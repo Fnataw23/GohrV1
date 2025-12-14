@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('login')->unique();
+            $table->string('email')->nullable()->unique();
             $table->string('password');
             $table->enum('role', ['admin', 'operator']);
             $table->enum('status', ['pending', 'active', 'blocked'])->default('pending');
