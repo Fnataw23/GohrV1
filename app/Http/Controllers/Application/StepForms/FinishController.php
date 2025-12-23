@@ -209,8 +209,7 @@ class FinishController
             // Очищаем сессию
             session()->forget('application');
 
-            return redirect()->route('applications.index')
-                ->with('success', "Заявка №{$application->id} успешно создана!");
+            return redirect()->route('main.index')->with('success', 'Заявка успешно создана!');
 
         } catch (\Exception $e) {
             DB::rollBack();

@@ -15,6 +15,7 @@ use App\Http\Controllers\Application\StepForms\IndexController;
 use App\Http\Controllers\Front\MainController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 // Защищённые маршруты (требуют аутентификации)
@@ -32,6 +33,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('applications')->name('applications.')->group(function () {
         Route::get('/{application}', [ShowController::class, '__invoke'])->name('show');
         Route::get('/{application}/edit', [EditController::class, 'edit'])->name('edit');
+
         Route::patch('/{application}', [EditController::class, 'update'])->name('update');
 
         Route::get('/create/step1', [Step1Controller::class, 'show'])->name('create.step1');
@@ -57,9 +59,16 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/create/confirm', [ConfirmController::class, '__invoke'])->name('create.confirm');
         Route::post('/create/finish', [FinishController::class, '__invoke'])->name('store.finish');
+
+
     });
     // Отчёты
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/settings', [SettingsController::class, 'index'])
+        ->name('settings.index');
+
+    Route::patch('/settings', [SettingsController::class, 'update'])
+        ->name('settings.update');
 
     // Профиль Breeze
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

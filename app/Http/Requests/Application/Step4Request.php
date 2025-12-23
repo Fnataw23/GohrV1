@@ -28,7 +28,17 @@ class Step4Request extends FormRequest
             'organization.phone' => 'required_if:organization_option,new|nullable|string|max:20',
             'organization.email' => 'required_if:organization_option,new|nullable|email|max:255',
             'organization.postal_code' => 'required_if:organization_option,new|nullable|string|max:20',
-            'organization.region' => 'required_if:organization_option,new|nullable|string|max:255',
+            'organization.region' => [
+                'required_if:organization_option,new',
+                'nullable',
+                'string',
+                'max:255',
+                function ($attribute, $value, $fail) {
+                    if ($value && !in_array($value, config('regions'))) {
+                        $fail('Выбран несуществующий регион для организации');
+                    }
+                },
+            ],
             'organization.city' => 'required_if:organization_option,new|nullable|string|max:255',
             'organization.street' => 'required_if:organization_option,new|nullable|string|max:255',
             'organization.house' => 'required_if:organization_option,new|nullable|string|max:50',

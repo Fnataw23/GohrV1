@@ -131,6 +131,7 @@
                                 <label for="org_phone" class="form-label">Телефон</label>
                                 <input type="tel" class="form-control" id="org_phone"
                                        name="organization[phone]"
+                                       placeholder="+7 (___) ___-__-__""
                                        value="{{ old('organization.phone', $org['phone'] ?? '') }}">
                                 @error('organization.phone') <div class="text-danger">{{ $message }}</div> @enderror
                             </div>
@@ -154,9 +155,18 @@
                             </div>
                             <div class="col-md-9">
                                 <label for="org_region" class="form-label">Регион</label>
-                                <input type="text" class="form-control" id="org_region"
-                                       name="organization[region]"
-                                       value="{{ old('organization.region', $org['region'] ?? '') }}">
+                                <select class="form-select" id="org_region" name="organization[region]">
+                                    <option value="">Выберите регион</option>
+                                    @foreach($regions as $region)
+                                        <option value="{{ $region }}"
+                                            {{ old('organization.region', $org['region'] ?? '') == $region ? 'selected' : '' }}>
+                                            {{ $region }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('organization.region')
+                                <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 

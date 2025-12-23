@@ -65,7 +65,7 @@ class Hunter extends Model
     // Связь с охотничьими билетами
     public function huntingCards()
     {
-        return $this->hasOne(HuntingCard::class); // или hasMany если может быть несколько
+        return $this->hasMany(HuntingCard::class); // было hasOne
     }
 
     public function addresses()

@@ -48,7 +48,7 @@
                     <label class="form-label">Телефон</label>
                     <input type="tel" class="form-control" name="phone"
                            value="{{ old('phone', $data['phone'] ?? '') }}"
-                           pattern="^\+7\d{10}$" required placeholder="+7**********">
+                           placeholder="+7 (___) ___-__-__" required>
                 </div>
             </div>
 
@@ -64,7 +64,7 @@
                     <label class="form-label">СНИЛС</label>
                     <input type="text" class="form-control" name="snils"
                            value="{{ old('snils', $data['snils'] ?? '') }}"
-                           maxlength="14" placeholder="XXX-XXX-XXX XX" required>
+                           placeholder="___-___-___ __" required>
                 </div>
             </div>
 

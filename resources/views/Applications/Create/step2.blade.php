@@ -14,8 +14,18 @@
                 </div>
                 <div class="col-md-6">
                     <label for="region" class="form-label">Регион</label>
-                    <input type="text" class="form-control" id="region" name="region" value="{{ old('region', $address['region'] ?? '') }}" required>
-                    @error('region') <div class="text-danger">{{ $message }}</div> @enderror
+                    <select class="form-select" id="region" name="region" required>
+                        <option value="">Выберите регион</option>
+                        @foreach($regions as $region)
+                            <option value="{{ $region }}"
+                                {{ old('region', $address['region'] ?? '') == $region ? 'selected' : '' }}>
+                                {{ $region }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('region')
+                    <div class="text-danger">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 

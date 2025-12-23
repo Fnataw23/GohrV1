@@ -87,11 +87,7 @@
         </button>
 
         <!-- Ссылка на главную -->
-        <div class="text-center">
-            <a href="{{ route('main.index') }}" class="text-decoration-none text-secondary">
-                ← На главную страницу
-            </a>
-        </div>
+
     </form>
 
     <!-- Информация для пользователя -->
